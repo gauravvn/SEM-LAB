@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t pid = fork();
+
+    if (pid == -1) {
+        perror("Fork failed");
+        return 1;
+    }
+
+    if (pid == 0) {
+        // This code is executed by the child process
+        char* args[] = { "ls", "-l", NULL };
+        execvp("ls", args);
+        perror("Exec failed");
+        return 1;
+    } else {
+        // This code is executed by the parent process
+        // With wait()
+        int status;
+        wait(&status);
+        printf("Child process has finished.\n");
+
+        // Without wait()
+        // sleep(2); // Uncomment this line if you want to observe without wait()
+        printf("Parent process continues without waiting.\n");
+    }
+
+    return 0;
+}

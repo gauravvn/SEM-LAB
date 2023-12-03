@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Employee structure
+struct Employee {
+    char name[50];
+    int employeeID;
+    char designation[20];
+    float salary;
+    struct Employee* next;
+};
+
+// Function to insert a new employee into the linked list
+void insertEmployee(struct Employee** head, char name[], int employeeID, char designation[], float salary) {
+    struct Employee* newEmployee = (struct Employee*)malloc(sizeof(struct Employee));
+    strcpy(newEmployee->name, name);
+    newEmployee->employeeID = employeeID;
+    strcpy(newEmployee->designation, designation);
+    newEmployee->salary = salary;
+    newEmployee->next = *head;
+    *head = newEmployee;
+}
+
+// Function to search for an employee by ID and display details
+void searchEmployee(struct Employee* head, int targetID) {
+    while (head != NULL) {
+        if (head->employeeID == targetID) {
+            printf("Employee found!\n");
+            printf("Name: %s\n", head->name);
+            printf("Employee ID: %d\n", head->employeeID);
+            printf("Designation: %s\n", head->designation);
+            printf("Salary: %.2f\n", head->salary);
+            return; // Employee found, exit the function
+        }
+        head = head->next;
+    }
+    printf("Employee not found with ID %d\n", targetID);
+}
+
+// Function to calculate the average salary of employees with the designation "Manager"
+float averageManagerSalary(struct Employee* head) {
+    int count = 0;
+    float totalSalary = 0;
+
+    while (head != NULL) {
+        if (strcmp(head->designation, "Manager") == 0) {
+            totalSalary += head->salary;
+            count++;
+        }
+        head = head->next;
+    }
+
+    if (count == 0) {
+        return 0.0; // Avoid division by zero
+    }
+
+    return totalSalary / count;
+}
+
+// Function to display all employees in the linked list
+void displayEmployees(struct Employee* head) {
+    printf("Employee Details:\n");
+    while (head != NULL) {
+        printf("Name: %s, ID: %d, Designation: %s, Salary: %.2f\n",
+               head->name, head->employeeID, head->designation, head->salary);
+        head = head->next;
+    }
+}
+
+// Function to free the memory allocated for the linked list
+void freeList(struct Employee* head) {
+    while (head != NULL) {
+        struct Employee* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+// Main function
+int main() {
+    struct Employee* head = NULL; // Initialize the linked list
+
+    // Insert N employee information into the linked list
+    int N;
+    printf("Enter the number of employees (N): ");
+    scanf("%d", &N);
+
+    for (int i = 0; i < N; ++i) {
+        char name[50];
+        int employeeID;
+        char designation[20];
+        float salary;
+
+        printf("\nEnter details for employee %d:\n", i + 1);
+        printf("Name: ");
+        scanf("%s", name);
+        printf("Employee ID: ");
+        scanf("%d", &employeeID);
+        printf("Designation: ");
+        scanf("%s", designation);
+        printf("Salary: ");
+        scanf("%f", &salary);
+
+        insertEmployee(&head, name, employeeID, designation, salary);
+    }
+
+    // Display all employees
+    displayEmployees(head);
+
+    // Search for an employee by ID
+    int searchID;
+    printf("\nEnter the Employee ID to search: ");
+    scanf("%d", &searchID);
+    searchEmployee(head, searchID);
+
+    // Display average salary of employees with designation "Manager"
+    float avgSalary = averageManagerSalary(head);
+    printf("\nAverage salary of employees with designation 'Manager': %.2f\n", avgSalary);
+
+    // Free allocated memory for the linked list
+    freeList(head);
+
+    return 0;
+}
