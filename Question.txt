@@ -1,0 +1,35 @@
+1. Write a program to insert N employee information into the Linked List.
+a. Write a function to Search an Employee and display his details.
+b. Display the Average salary of all the Employees with designation Manager.
+
+2. Consider two liked list A and B in sorted order. Write a program to merge the linked list A and B such that the final list C is in sorted order.
+
+3. Consider two liked list A of size N. Write a program to Split the linked list two parts i.e. B and C each of size N/2.
+
+4. Write a program to create a single linked list. The address of the head is to be stored in a separate structure which has two fields
+struct head { struct node *head_ptr; int num; }; The head_ptr will store the pointer to the head node num: Is the count of the number of elements present in the linked list. Write implementations for insertion and deletion which will update the head structure appropriately
+
+5. WAP to implement two stacks in one array A[1 .. N] in such a way that neither stack overflows unless the total number of elements in both stacks together is N.
+
+6. WAP to implement stack operations PUSH and POP using 2 Queues.
+
+7. WAP to implement Queue operations INSERT and DELETE using 2 stacks.
+
+8. Write a program to insert N Student information into the Doubly Linked List. Write a function to
+a. Search a Student and display his details.
+b. Display the details of the students who have scored above 90 in Math’s and Science.
+
+9. WAP program to create binary tree and traverse the tree using Inorder, PreOrder, Post Order Traversing Technique.
+
+10. WAP to create and delete a node from a binary Search tree. Traverse the BST using Level Order Traversing Technique.
+
+11. Create an adjacency list for graph and implement BFS.
+
+12. Create an adjacency matrix for graph and implement DFS.
+
+13. Create an adjacency list for graph and find its connected components using DFS.
+
+
+14. Let the parent fork and let the child execute ls command with exec. Observe the result with and without having wait()  system call in the parent.
+
+15. Create two threads in a main program, let the first thread execute a function to display a message namely ”this is thread one” , similarly let the second thread displays ”this is thread two”.

@@ -1,0 +1,36 @@
+#include <stdio.h>
+#include <pthread.h>
+
+// Function to display a message for the first thread
+void* thread_one_function(void* arg) {
+    printf("This is thread one\n");
+    return NULL;
+}
+
+// Function to display a message for the second thread
+void* thread_two_function(void* arg) {
+    printf("This is thread two\n");
+    return NULL;
+}
+
+int main() {
+    pthread_t thread_one, thread_two;
+
+    // Create the first thread
+    if (pthread_create(&thread_one, NULL, thread_one_function, NULL) != 0) {
+        perror("pthread_create");
+        return 1;
+    }
+
+    // Create the second thread
+    if (pthread_create(&thread_two, NULL, thread_two_function, NULL) != 0) {
+        perror("pthread_create");
+        return 1;
+    }
+
+    // Wait for both threads to finish
+    pthread_join(thread_one, NULL);
+    pthread_join(thread_two, NULL);
+
+    return 0;
+}

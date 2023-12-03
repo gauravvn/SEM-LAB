@@ -1,0 +1,130 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Student structure
+struct Student {
+    char name[50];
+    int rollNumber;
+    float mathScore;
+    float scienceScore;
+    struct Student* prev;
+    struct Student* next;
+};
+
+// Function to create a new student node
+struct Student* createStudentNode(char name[], int rollNumber, float mathScore, float scienceScore) {
+    struct Student* newNode = (struct Student*)malloc(sizeof(struct Student));
+    strcpy(newNode->name, name);
+    newNode->rollNumber = rollNumber;
+    newNode->mathScore = mathScore;
+    newNode->scienceScore = scienceScore;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+// Function to insert a student into the doubly linked list
+void insertStudent(struct Student** head, char name[], int rollNumber, float mathScore, float scienceScore) {
+    struct Student* newStudent = createStudentNode(name, rollNumber, mathScore, scienceScore);
+
+    if (*head == NULL) {
+        *head = newStudent;
+    } else {
+        newStudent->next = *head;
+        (*head)->prev = newStudent;
+        *head = newStudent;
+    }
+}
+
+// Function to search for a student by roll number and display details
+void searchStudent(struct Student* head, int targetRollNumber) {
+    while (head != NULL) {
+        if (head->rollNumber == targetRollNumber) {
+            printf("Student found!\n");
+            printf("Name: %s\n", head->name);
+            printf("Roll Number: %d\n", head->rollNumber);
+            printf("Math Score: %.2f\n", head->mathScore);
+            printf("Science Score: %.2f\n", head->scienceScore);
+            return; // Student found, exit the function
+        }
+        head = head->next;
+    }
+    printf("Student not found with Roll Number %d\n", targetRollNumber);
+}
+
+// Function to display details of students who have scored above 90 in Math and Science
+void displayHighScorers(struct Student* head) {
+    printf("Students who scored above 90 in Math and Science:\n");
+    while (head != NULL) {
+        if (head->mathScore > 90 && head->scienceScore > 90) {
+            printf("Name: %s, Roll Number: %d, Math Score: %.2f, Science Score: %.2f\n",
+                   head->name, head->rollNumber, head->mathScore, head->scienceScore);
+        }
+        head = head->next;
+    }
+}
+
+// Function to display all students in the doubly linked list
+void displayStudents(struct Student* head) {
+    printf("Student Details:\n");
+    while (head != NULL) {
+        printf("Name: %s, Roll Number: %d, Math Score: %.2f, Science Score: %.2f\n",
+               head->name, head->rollNumber, head->mathScore, head->scienceScore);
+        head = head->next;
+    }
+}
+
+// Function to free the memory allocated for the doubly linked list
+void freeList(struct Student* head) {
+    while (head != NULL) {
+        struct Student* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+// Main function
+int main() {
+    struct Student* head = NULL; // Initialize the doubly linked list
+
+    // Insert N student information into the linked list
+    int N;
+    printf("Enter the number of students (N): ");
+    scanf("%d", &N);
+
+    for (int i = 0; i < N; ++i) {
+        char name[50];
+        int rollNumber;
+        float mathScore, scienceScore;
+
+        printf("\nEnter details for student %d:\n", i + 1);
+        printf("Name: ");
+        scanf("%s", name);
+        printf("Roll Number: ");
+        scanf("%d", &rollNumber);
+        printf("Math Score: ");
+        scanf("%f", &mathScore);
+        printf("Science Score: ");
+        scanf("%f", &scienceScore);
+
+        insertStudent(&head, name, rollNumber, mathScore, scienceScore);
+    }
+
+    // Display all students
+    displayStudents(head);
+
+    // Search for a student by Roll Number
+    int searchRollNumber;
+    printf("\nEnter the Roll Number to search: ");
+    scanf("%d", &searchRollNumber);
+    searchStudent(head, searchRollNumber);
+
+    // Display details of students who scored above 90 in Math and Science
+    displayHighScorers(head);
+
+    // Free allocated memory for the doubly linked list
+    freeList(head);
+
+    return 0;
+}

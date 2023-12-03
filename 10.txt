@@ -1,0 +1,177 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+// Structure for a binary search tree (BST) node
+struct TreeNode {
+    int data;
+    struct TreeNode* left;
+    struct TreeNode* right;
+};
+
+// Function to create a new BST node
+struct TreeNode* createNode(int data) {
+    struct TreeNode* newNode = (struct TreeNode*)malloc(sizeof(struct TreeNode));
+    newNode->data = data;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    return newNode;
+}
+
+// Function to insert a node into the BST
+struct TreeNode* insertNode(struct TreeNode* root, int data) {
+    if (root == NULL) {
+        return createNode(data);
+    }
+
+    if (data < root->data) {
+        root->left = insertNode(root->left, data);
+    } else if (data > root->data) {
+        root->right = insertNode(root->right, data);
+    }
+
+    return root;
+}
+
+// Function to find the minimum value node in a BST
+struct TreeNode* findMin(struct TreeNode* root) {
+    while (root->left != NULL) {
+        root = root->left;
+    }
+    return root;
+}
+
+// Function to delete a node with a given value from the BST
+struct TreeNode* deleteNode(struct TreeNode* root, int key) {
+    if (root == NULL) {
+        return root;
+    }
+
+    if (key < root->data) {
+        root->left = deleteNode(root->left, key);
+    } else if (key > root->data) {
+        root->right = deleteNode(root->right, key);
+    } else {
+        // Node with only one child or no child
+        if (root->left == NULL) {
+            struct TreeNode* temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            struct TreeNode* temp = root->left;
+            free(root);
+            return temp;
+        }
+
+        // Node with two children: Get the inorder successor (smallest in the right subtree)
+        struct TreeNode* temp = findMin(root->right);
+
+        // Copy the inorder successor's data to this node
+        root->data = temp->data;
+
+        // Delete the inorder successor
+        root->right = deleteNode(root->right, temp->data);
+    }
+
+    return root;
+}
+
+// Function for Level Order (Breadth-First) Traversal
+void levelOrderTraversal(struct TreeNode* root) {
+    if (root == NULL) {
+        return;
+    }
+
+    struct QueueNode {
+        struct TreeNode* data;
+        struct QueueNode* next;
+    };
+
+    struct Queue {
+        struct QueueNode* front;
+        struct QueueNode* rear;
+    };
+
+    struct Queue* queue = (struct Queue*)malloc(sizeof(struct Queue));
+    queue->front = NULL;
+    queue->rear = NULL;
+
+    // Enqueue the root
+    struct QueueNode* rootQueueNode = (struct QueueNode*)malloc(sizeof(struct QueueNode));
+    rootQueueNode->data = root;
+    rootQueueNode->next = NULL;
+    queue->front = rootQueueNode;
+    queue->rear = rootQueueNode;
+
+    while (queue->front != NULL) {
+        struct TreeNode* current = queue->front->data;
+        printf("%d ", current->data);
+
+        if (current->left != NULL) {
+            struct QueueNode* newNode = (struct QueueNode*)malloc(sizeof(struct QueueNode));
+            newNode->data = current->left;
+            newNode->next = NULL;
+            queue->rear->next = newNode;
+            queue->rear = newNode;
+        }
+
+        if (current->right != NULL) {
+            struct QueueNode* newNode = (struct QueueNode*)malloc(sizeof(struct QueueNode));
+            newNode->data = current->right;
+            newNode->next = NULL;
+            queue->rear->next = newNode;
+            queue->rear = newNode;
+        }
+
+        // Dequeue the current node
+        struct QueueNode* temp = queue->front;
+        queue->front = queue->front->next;
+        free(temp);
+    }
+
+    free(queue);
+}
+
+// Function to free the memory allocated for the BST
+void freeBST(struct TreeNode* root) {
+    if (root != NULL) {
+        freeBST(root->left);
+        freeBST(root->right);
+        free(root);
+    }
+}
+
+// Main function
+int main() {
+    struct TreeNode* root = NULL; // Initialize the BST root
+
+    // Insert nodes into the BST
+    root = insertNode(root, 50);
+    insertNode(root, 30);
+    insertNode(root, 20);
+    insertNode(root, 40);
+    insertNode(root, 70);
+    insertNode(root, 60);
+    insertNode(root, 80);
+
+    // Perform Level Order traversal
+    printf("Level Order Traversal: ");
+    levelOrderTraversal(root);
+    printf("\n");
+
+    // Delete a node from the BST
+    int keyToDelete;
+    printf("Enter a value to delete from the BST: ");
+    scanf("%d", &keyToDelete);
+    root = deleteNode(root, keyToDelete);
+
+    // Perform Level Order traversal after deletion
+    printf("Level Order Traversal after deletion: ");
+    levelOrderTraversal(root);
+    printf("\n");
+
+    // Free allocated memory for the BST
+    freeBST(root);
+
+    return 0;
+}

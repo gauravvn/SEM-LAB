@@ -1,0 +1,95 @@
+#include <stdio.h>
+#include <stdlib.h>
+// Structure to represent the two stacks
+struct TwoStacks {
+int* array;
+int capacity;
+int top1; // Top index for Stack 1
+int top2; // Top index for Stack 2
+};
+// Function to initialize the two stacks
+struct TwoStacks* initializeTwoStacks(int capacity) {
+struct TwoStacks* twoStacks = (struct TwoStacks*)malloc(sizeof(struct TwoStacks));
+twoStacks->capacity = capacity;
+twoStacks->array = (int*)malloc(capacity * sizeof(int));
+twoStacks->top1 = -1; // Initialize top index for Stack 1
+twoStacks->top2 = capacity; // Initialize top index for Stack 2
+return twoStacks;
+}
+// Function to push an element onto Stack 1
+void pushStack1(struct TwoStacks* twoStacks, int data) {
+if (twoStacks->top1 < twoStacks->top2 - 1) {
+twoStacks->array[++twoStacks->top1] = data;
+} else {
+printf("Stack Overflow: Cannot push element onto Stack 1\n");
+}
+}
+// Function to push an element onto Stack 2
+void pushStack2(struct TwoStacks* twoStacks, int data) {
+if (twoStacks->top1 < twoStacks->top2 - 1) {
+twoStacks->array[--twoStacks->top2] = data;
+} else {
+printf("Stack Overflow: Cannot push element onto Stack 2\n");
+}
+}
+// Function to pop an element from Stack 1
+int popStack1(struct TwoStacks* twoStacks) {
+if (twoStacks->top1 >= 0) {
+return twoStacks->array[twoStacks->top1--];
+} else {
+printf("Stack 1 is empty\n");
+return -1; // Invalid value to indicate an empty stack
+}
+}
+// Function to pop an element from Stack 2
+int popStack2(struct TwoStacks* twoStacks) {
+if (twoStacks->top2 < twoStacks->capacity) {
+return twoStacks->array[twoStacks->top2++];
+} else {
+printf("Stack 2 is empty\n");
+return -1; // Invalid value to indicate an empty stack
+}
+}
+// Function to print the elements of Stack 1
+void printStack1(struct TwoStacks* twoStacks) {
+printf("Stack 1: ");
+for (int i = 0; i <= twoStacks->top1; ++i) {
+printf("%d ", twoStacks->array[i]);
+}
+printf("\n");
+}
+// Function to print the elements of Stack 2
+void printStack2(struct TwoStacks* twoStacks) {
+printf("Stack 2: ");
+for (int i = twoStacks->capacity - 1; i >= twoStacks->top2; --i) {
+printf("%d ", twoStacks->array[i]);
+}
+printf("\n");
+}
+int main() {
+// Initialize two stacks in one array with a capacity of 6
+struct TwoStacks* twoStacks = initializeTwoStacks(6);
+// Push elements onto Stack 1
+pushStack1(twoStacks, 1);
+pushStack1(twoStacks, 2);
+pushStack1(twoStacks, 3);
+// Push elements onto Stack 2
+pushStack2(twoStacks, 4);
+pushStack2(twoStacks, 5);
+pushStack2(twoStacks, 6);
+// Print the elements of both stacks
+printStack1(twoStacks);
+printStack2(twoStacks);
+// Pop elements from both stacks
+int popped1 = popStack1(twoStacks);
+int popped2 = popStack2(twoStacks);
+// Print the elements of both stacks after popping
+printf("Popped from Stack 1: %d\n", popped1);
+printf("Popped from Stack 2: %d\n", popped2);
+printStack1(twoStacks);
+printStack2(twoStacks);
+// Free the memory allocated for the two stacks
+free(twoStacks->array);
+free(twoStacks);
+return 0;
+}

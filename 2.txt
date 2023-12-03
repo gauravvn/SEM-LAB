@@ -1,0 +1,118 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+// Node structure for a linked list
+struct Node {
+    int data;
+    struct Node* next;
+};
+
+// Function to insert a new node at the end of a linked list
+void insertNode(struct Node** head, int data) {
+    struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
+    newNode->data = data;
+    newNode->next = NULL;
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        struct Node* temp = *head;
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = newNode;
+    }
+}
+
+// Function to merge two sorted linked lists into a new sorted list
+struct Node* mergeSortedLists(struct Node* listA, struct Node* listB) {
+    struct Node* mergedList = NULL;
+    struct Node* tail = NULL;
+
+    while (listA != NULL && listB != NULL) {
+        if (listA->data <= listB->data) {
+            insertNode(&mergedList, listA->data);
+            listA = listA->next;
+        } else {
+            insertNode(&mergedList, listB->data);
+            listB = listB->next;
+        }
+
+        // Update the tail pointer to the last node of the merged list
+        if (tail == NULL) {
+            tail = mergedList;
+        } else {
+            while (tail->next != NULL) {
+                tail = tail->next;
+            }
+        }
+    }
+
+    // If there are remaining nodes in listA or listB, add them to the merged list
+    while (listA != NULL) {
+        insertNode(&mergedList, listA->data);
+        listA = listA->next;
+    }
+
+    while (listB != NULL) {
+        insertNode(&mergedList, listB->data);
+        listB = listB->next;
+    }
+
+    return mergedList;
+}
+
+// Function to display a linked list
+void displayList(struct Node* head) {
+    while (head != NULL) {
+        printf("%d ", head->data);
+        head = head->next;
+    }
+    printf("\n");
+}
+
+// Function to free the memory allocated for a linked list
+void freeList(struct Node* head) {
+    while (head != NULL) {
+        struct Node* temp = head;
+        head = head->next;
+        free(temp);
+    }
+}
+
+// Main function
+int main() {
+    struct Node* listA = NULL;
+    struct Node* listB = NULL;
+
+    // Insert elements into list A
+    insertNode(&listA, 2);
+    insertNode(&listA, 5);
+    insertNode(&listA, 7);
+
+    // Insert elements into list B
+    insertNode(&listB, 3);
+    insertNode(&listB, 4);
+    insertNode(&listB, 6);
+
+    // Display the original linked lists A and B
+    printf("Linked List A: ");
+    displayList(listA);
+
+    printf("Linked List B: ");
+    displayList(listB);
+
+    // Merge the two sorted linked lists A and B into a new linked list C
+    struct Node* mergedList = mergeSortedLists(listA, listB);
+
+    // Display the merged linked list C
+    printf("Merged Linked List C: ");
+    displayList(mergedList);
+
+    // Free allocated memory for the linked lists
+    freeList(listA);
+    freeList(listB);
+    freeList(mergedList);
+
+    return 0;
+}
