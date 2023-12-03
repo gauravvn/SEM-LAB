@@ -30,3 +30,44 @@ int main() {
 
     return 0;
 }
+gcc fork_exec_wait.c -o fork_exec_wait
+./fork_exec_wait
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/wait.h>
+
+int main() {
+    pid_t childPid;
+
+    printf("Parent process (PID: %d)\n", getpid());
+
+    // Create a new process
+    childPid = fork();
+
+    if (childPid == -1) {
+        perror("fork");
+        exit(EXIT_FAILURE);
+    }
+
+    if (childPid == 0) {
+        // This code is executed by the child process
+        printf("Child process (PID: %d) - Executing ls command:\n", getpid());
+        
+        // Use exec to replace the child process with the 'ls' command
+        execlp("ls", "ls", NULL);
+
+        // If exec fails
+        perror("execlp");
+        exit(EXIT_FAILURE);
+    } else {
+        // This code is executed by the parent process
+
+        // Uncomment the following line to observe the difference
+        wait(NULL);
+
+        printf("Parent process - Continuing execution while child is running.\n");
+    }
+
+    return 0;
+}
